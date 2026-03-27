@@ -15,12 +15,25 @@ class Game:
 
 
 class Field:
-    def __init__(self, rows, cols):
+    def __init__(self, rows, cols, state_cells):
         self.rows = rows
         self.cols = cols
+        self.state_cells = state_cells # state_cells == {x:.., y:.., state: emp | fill | влучена | промах}
     
     # клас повинен зберігати стан поля
     #   (де розташовані кораблі, де були постріли)
+
+    def border_check(self, x, y):
+        if 0 < x <= self.x:
+            return True
+        else:
+            return False
+        
+    def checking_for_ships_collisions():
+        pass
+
+    def chot_processing():
+        pass
 
 
 class Ship:
