@@ -8,6 +8,24 @@ import re
 # який містить структуру сторінки та скрипт для відображення діалогів, - і т.ч.
 # створити нові html-ф-ли для кожного json-ф-лу.  
 
+# var jsonData = []
+# chat_min.html
+
+CHAT_HTML = "./_chat/chat.html"
+CHAT_TEMPL_HTML = "./_chat/chat_min.html"
+
+
+def gen_html_from_json(json_file, template_file, output_file):
+    with open(template_file, 'r', encoding='utf-8') as tmpl_html, \
+         open(json_file, 'r', encoding='utf-8') as jsn_fl, \
+         open(output_file, 'w', encoding='utf-8') as out_html:
+            content = tmpl_html.read()
+            json_data = json.load(jsn_fl)
+            
+            json_str = json.dumps(json_data, ensure_ascii=False)
+            new_content = content.replace('var jsonData = []', f'var jsonData = [{json_str}]')
+            out_html.write(new_content)
+
 
 def split_chat_html(input_file, chunk_size=500):
     """
@@ -83,6 +101,7 @@ def split_chat_html(input_file, chunk_size=500):
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(index_content)
     print(f"Створено index файл: {index_path}")
+
 
 def main():
     split_chat_html('./_chat/chat.html', chunk_size=100) # налаштуйте розмір чанка тут
