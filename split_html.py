@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import glob
 
 #  Є кілька json-ф-лів, які містять діалоги.
 # Вони мають однакову структуру, але різну кількість діалогів.
@@ -17,6 +18,7 @@ import re
 CHAT_HTML = "../_chtgpt/chat.html"
 CHAT_TEMPL_HTML = "./_chat/chat_min.html"
 OUT_CHAT_FLDR = "../_chtgpt/htmls/"
+JSON_FLDR = "../_chtgpt/jsons/"
 
 
 def gen_html_from_json(json_file, template_file, output_file):
@@ -24,7 +26,14 @@ def gen_html_from_json(json_file, template_file, output_file):
          open(json_file, 'r', encoding='utf-8') as jsn_fl, \
          open(output_file, 'w', encoding='utf-8') as out_html:
             content = tmpl_html.read()
-            json_data = json.load(jsn_fl)
+            
+            try:
+                json_data = json.load(jsn_fl)
+            except json.JSONDecodeError as e:
+                print(f"Помилка при десеріалізації JSON: {e}")
+                print("Position:", e.pos)
+                print("Around error:", repr(jsn_fl.read()[e.pos-10:e.pos+10]))
+                return
             
             json_str = json.dumps(json_data, ensure_ascii=False)
             new_content = content.replace('var jsonData = []', f'var jsonData = [{json_str}]')
@@ -109,8 +118,11 @@ def split_chat_html(input_file, chunk_size=500):
 
 
 def main():
-    gen_html_from_json('../_chtgpt/jsons/json_aa.json', CHAT_TEMPL_HTML, OUT_CHAT_FLDR + 'chat_aa.html')
-    # split_chat_html('./_chat/chat.html', chunk_size=100) # налаштуйте розмір чанка тут
+    json_files = glob.glob(os.path.join(JSON_FLDR, '*.json'))
+    for json_file in json_files:
+        gen_html_from_json(json_file, CHAT_TEMPL_HTML, OUT_CHAT_FLDR + os.path.basename(json_file).replace('.json', '.html'))
+
+    # split_chat_html('../_chtgpt/chat.html', chunk_size=100) # налаштуйте розмір чанка тут
 
 
 if __name__ == "__main__":
