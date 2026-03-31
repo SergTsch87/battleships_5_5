@@ -2,6 +2,7 @@ import json
 import os
 import re
 import glob
+# from concurrent.futures import ProcessPoolExecutor # для запуску окремих процесів на кожному ядрі CPU, що дозволить парсити JSON-ф-ли парал-но
 
 #  Є кілька json-ф-лів, які містять діалоги.
 # Вони мають однакову структуру, але різну кількість діалогів.
@@ -21,6 +22,7 @@ OUT_CHAT_FLDR = "../_chtgpt/htmls/"
 JSON_FLDR = "../_chtgpt/jsons/"
 
 
+# def convert_json_to_html(json_file, template_file, output_file):
 def gen_html_from_json(json_file, template_file, output_file):
     with open(template_file, 'r', encoding='utf-8') as tmpl_html, \
          open(json_file, 'r', encoding='utf-8') as jsn_fl, \
