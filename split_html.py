@@ -8,11 +8,15 @@ import re
 # який містить структуру сторінки та скрипт для відображення діалогів, - і т.ч.
 # створити нові html-ф-ли для кожного json-ф-лу.  
 
+# Додати '.json' до усіх файлів папки:
+# for f in *; do mv "$f" "$f.json"; done
+
 # var jsonData = []
 # chat_min.html
 
-CHAT_HTML = "./_chat/chat.html"
+CHAT_HTML = "../_chtgpt/chat.html"
 CHAT_TEMPL_HTML = "./_chat/chat_min.html"
+OUT_CHAT_FLDR = "../_chtgpt/htmls/"
 
 
 def gen_html_from_json(json_file, template_file, output_file):
@@ -38,6 +42,7 @@ def split_chat_html(input_file, chunk_size=500):
     # 1. Створюємо шаблон: замінюємо JSON на порожній масив
     # Знаходимо рядок var jsonData = [...]
     json_match = re.search(r'var jsonData = (\[.*?\]);', content, re.DOTALL)
+
     if not json_match:
         raise ValueError("JSON data not found in the expected format")
     
@@ -104,7 +109,8 @@ def split_chat_html(input_file, chunk_size=500):
 
 
 def main():
-    split_chat_html('./_chat/chat.html', chunk_size=100) # налаштуйте розмір чанка тут
+    gen_html_from_json('../_chtgpt/jsons/json_aa.json', CHAT_TEMPL_HTML, OUT_CHAT_FLDR + 'chat_aa.html')
+    # split_chat_html('./_chat/chat.html', chunk_size=100) # налаштуйте розмір чанка тут
 
 
 if __name__ == "__main__":
